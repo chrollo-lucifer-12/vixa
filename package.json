@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "push": "npx drizzle-kit push"
+    "push": "pnpm dlx drizzle-kit push"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.12.0",
