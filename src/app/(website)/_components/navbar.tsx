@@ -4,7 +4,7 @@ import Link from "next/link";
 import {Button} from "@/components/ui/button";
 
 const LandingPageNavbar = () => {
-    return <div className="flex w-full justify-between items-center">
+    return <div className="flex justify-between items-center m-6">
         <div className="text-3xl font-semibold flex items-center gap-x-3 ml-5">
             <MenuIcon className="w-6 h-6" />
             <Image alt="logo" src="/vixa-logo.png" width={32} height={32} />
@@ -16,7 +16,7 @@ const LandingPageNavbar = () => {
             <Link href="/">Contact</Link>
         </div>
         <Link href="/auth/sign-in">
-            <Button className="text-base flex gap-x-2">Login</Button>
+            <Button className="text-base flex gap-x-2 bg-white text-black hover:bg-white hover:text-black">Login</Button>
         </Link>
     </div>
 }

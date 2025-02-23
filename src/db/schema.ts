@@ -1,12 +1,12 @@
 // tables
 
-import { integer, pgTable, text, date, boolean, pgEnum } from "drizzle-orm/pg-core";
+import { integer, pgTable, text, date, boolean, pgEnum, uuid } from "drizzle-orm/pg-core";
 import { relations} from "drizzle-orm";
 
 
 
 export const usersTable = pgTable("users", {
-    id: integer("id").primaryKey().notNull(),
+    id: uuid("id").primaryKey().notNull().defaultRandom(),
     email: text("email").notNull(),
     firstName: text("first_name"),
     lastName : text("last_name"),
@@ -18,9 +18,9 @@ export const usersTable = pgTable("users", {
 export const mediaEnum = pgEnum("preset", ["hd", "sd"])
 
 export const mediaTable = pgTable("media", {
-    id: integer("id").primaryKey().notNull(),
-    userId: integer("user_id").references(() => usersTable.id),
-    screen: text(),
+    id: uuid("id").primaryKey().notNull().defaultRandom(),
+    userId: uuid("user_id").references(() => usersTable.id),
+    screen: text("screen"),
     mic: text("mic"),
     camera: text("camera"),
     preset: mediaEnum("preset").default("sd")
@@ -29,54 +29,54 @@ export const mediaTable = pgTable("media", {
 export const workspaceEnum = pgEnum("type", ["personal", "public"])
 
 export const workspaceTable = pgTable("workspace", {
-    id: integer("id").primaryKey().notNull(),
+    id: uuid("id").primaryKey().notNull().defaultRandom(),
     name: text("name").notNull(),
     type: workspaceEnum("type"),
-    userId: integer("user_id").references(() => usersTable.id, {onDelete: "cascade"})
+    userId: uuid("user_id").references(() => usersTable.id, {onDelete: "cascade"})
 })
 
 export const folderTable = pgTable("folder", {
-    id: integer().primaryKey().notNull(),
-    name: text().default("Untitled Folder"),
-    createdAt: date(),
-    workspaceId: integer("workspace_id").references(() => workspaceTable.id, {onDelete: "cascade"}),
+    id: uuid("id").primaryKey().notNull().defaultRandom(),
+    name: text("name").default("Untitled Folder"),
+    createdAt: date("created_at"),
+    workspaceId: uuid("workspace_id").references(() => workspaceTable.id, {onDelete: "cascade"}),
 })
 
 export const videoTable = pgTable("video", {
-    id: integer("id").primaryKey().notNull(),
-    title: text(),
-    description: text(),
-    source: text().notNull(),
-    createdAt: date(),
-    folderId: integer("folder_id").references(() => folderTable.id, {onDelete : "cascade"}),
-    userId: integer("user_id").references(() => usersTable.id),
+    id: uuid("id").primaryKey().notNull().defaultRandom(),
+    title: text("title"),
+    description: text("description"),
+    source: text("source").notNull(),
+    createdAt: date("created_at"),
+    folderId: uuid("folder_id").references(() => folderTable.id, {onDelete : "cascade"}),
+    userId: uuid("user_id").references(() => usersTable.id),
     processing: boolean("processing"),
-    workspaceId: integer("workspace_id").references(() => workspaceTable.id, {onDelete: "cascade"}),
+    workspaceId: uuid("workspace_id").references(() => workspaceTable.id, {onDelete: "cascade"}),
     views: integer("views"),
-    summary: text()
+    summary: text("summary")
 })
 
 export const memberTable = pgTable("member", {
-    id: integer("id").primaryKey().notNull(),
-    userId: integer("user_id").references(() => usersTable.id),
-    createdAt: date(),
-    workspaceId: integer("workspace_id").references(() => workspaceTable.id, {onDelete: "cascade"})
+    id: uuid("id").primaryKey().notNull().defaultRandom(),
+    userId: uuid("user_id").references(() => usersTable.id),
+    createdAt: date("created_at").defaultNow(),
+    workspaceId: uuid("workspace_id").references(() => workspaceTable.id, {onDelete: "cascade"})
 })
 
 export const notificationTable = pgTable("notification", {
-    id: integer("id").primaryKey().notNull(),
-    userId: integer("user_id").references(() => usersTable.id),
-    createdAt: date(),
+    id: uuid("id").primaryKey().notNull(),
+    userId: uuid("user_id").references(() => usersTable.id),
+    createdAt: date("created_at").defaultNow(),
     title: text()
 })
 
 export const inviteTable = pgTable("invite", {
-    id: integer("id").primaryKey().notNull(),
-    senderId : integer("sender_id").references(() => usersTable.id),
-    receiverId: integer("receiver_id").references(() => usersTable.id),
-    content: text(),
-    workspaceId: integer("workspace_id").references(() => workspaceTable.id, {onDelete: "cascade"}),
-    accepted: boolean()
+    id: uuid("id").primaryKey().notNull(),
+    senderId : uuid("sender_id").references(() => usersTable.id),
+    receiverId: uuid("receiver_id").references(() => usersTable.id),
+    content: text("content"),
+    workspaceId: uuid("workspace_id").references(() => workspaceTable.id, {onDelete: "cascade"}),
+    accepted: boolean("accepted")
 })
 
 export const userRelations = relations(usersTable, ({one,many}) => ({

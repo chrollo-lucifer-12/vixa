@@ -1,15 +1,63 @@
 "use server"
 
 import {currentUser} from "@clerk/nextjs/server";
+import db from "../db/index";
+import {folderTable, memberTable, notificationTable, usersTable, videoTable, workspaceTable} from "@/db/schema";
+import {eq} from "drizzle-orm";
+import {v4} from "uuid"
 
 export const onAuthenticateUser = async () => {
     try {
-        const user = await currentUser()
+        const user = await currentUser();
         if (!user) {
             return {status : 403}
         }
-
+        const userExists = await db
+            .select()
+            .from(usersTable)
+            .innerJoin(workspaceTable, eq(usersTable.id, workspaceTable.userId))
+            .where(eq(usersTable.clerkId, user.id));
+        if (userExists.length > 0) {
+            return {status: 200, user: userExists[0].users, workspace: userExists[0].workspace}
+        }
+        const newUser = await db.insert(usersTable).values({id: v4(), clerkId: user.id, email: user.emailAddresses[0].emailAddress, firstName: user.firstName, lastName: user.lastName, image: user.imageUrl}).returning()
+        const newWorkspace = await db.insert(workspaceTable).values({id:v4(), userId: newUser[0].id, name: `${newUser[0].firstName}'s Workspace`, type: "personal"}).returning();
+        if (newUser && newWorkspace) return {status: 201, user: newUser[0], workspace: newWorkspace[0]};
+        return {status: 401, user: null, workspace: null}
     } catch (e) {
+        console.log(e);
+        return {status: 401, user: null, workspace: null}
+    }
+}
 
+export const getUserVideos = async (workspaceId : string) => {
+    try {
+        const videos = await db.select({videoId : videoTable.id, videoTitle: videoTable.title, videoCreatedAt: videoTable.createdAt, videoSource: videoTable.source, videoProcessing: videoTable.processing, workspaceId: videoTable.workspaceId, folderId: folderTable.id, folderName: folderTable.name}).from(videoTable).leftJoin(folderTable, eq(videoTable.folderId, folderTable.id)).where(eq(videoTable.workspaceId, workspaceId));
+        return videos
+    } catch (e) {
+        console.log(e);
+        return []
+    }
+}
+
+export const getUserWorkspaces = async () => {
+    try {
+        const user = await currentUser();
+        const workspaces = await db.select({workspaceId: workspaceTable.id, workspaceTitle: workspaceTable.name, workspaceType: workspaceTable.type, memberId: memberTable.id, }).from(workspaceTable).leftJoin(usersTable, eq(usersTable.id, workspaceTable.userId)).leftJoin(memberTable, eq(memberTable.workspaceId, workspaceTable.id)).where(eq(usersTable.clerkId, user!.id));
+        return workspaces
+    } catch (e) {
+        console.log(e);
+        return []
+    }
+}
+
+export const getUserNotifications = async () => {
+    try {
+        const user = await currentUser();
+        const notifications = await db.select({notificationId: notificationTable.id, notificationCreatedAt: notificationTable.createdAt, notificationTitle: notificationTable.title}).from(notificationTable).leftJoin(usersTable, eq(usersTable.id, notificationTable.userId)).where(eq(usersTable.clerkId, user!.id));
+        return notifications;
+    } catch (e) {
+        console.log(e);
+        return []
     }
 }
