@@ -3,3 +3,9 @@ export type WorkspaceProps = {
     workspaceTitle: string,
     workspaceType: "personal" | "public" | null,
 }[]
+
+export type NotificationProps = {
+    notificationId: string,
+    notificationCreatedAt: string | null,
+    notificationTitle: string | null
+}[]

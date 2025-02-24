@@ -24,7 +24,8 @@ export const useSearch = (key : string, type : "USERS") => {
     const {refetch, isFetching} = useQueryData([key, debounce], async ({queryKey}) => {
         if (type === "USERS") {
             const members = await searchMembers(queryKey[1] as string);
-            setOnUsers(members);
+            if (!members || members.length === 0) setOnUsers([]);
+            else setOnUsers(members);
         }
     }, false)
 
@@ -32,7 +33,7 @@ export const useSearch = (key : string, type : "USERS") => {
         if (debounce) {
             refetch();
         }
-        if (!debounce) setOnUsers(undefined);
+        if (!debounce) setOnUsers([]);
         return () => {
             debounce
         }

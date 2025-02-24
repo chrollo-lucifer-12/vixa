@@ -23,7 +23,11 @@ import {Button} from "@/components/ui/button";
 import {CircleX, Cross, PlusIcon} from "lucide-react";
 import SearchWorkspace from "../search-members";
 
-const SidebarLogo = () => {
+interface SidebarLogoProps {
+    activeWorkspaceId : string
+}
+
+const SidebarLogo = ({activeWorkspaceId} : SidebarLogoProps) => {
 
     const {data, isFetched} = useQueryData(["user-workspaces"], getUserWorkspaces);
     const workspaces = data as WorkspaceProps
@@ -60,14 +64,14 @@ const SidebarLogo = () => {
                     <DialogTrigger asChild className="text-white">
                         <Button className="text-white border-none w-[90%] hover:bg-[#272729] rounded-lg transition duration-300"  style={{borderRadius: "0.5rem"}}>Invite Members</Button>
                     </DialogTrigger>
-                    <DialogContent className="bg-black border-[#18181a] flex justify-between" style={{borderRadius: "0.3rem"}}>
+                    <DialogContent className="bg-black border-[#18181a]" style={{borderRadius: "0.3rem"}}>
                         <DialogHeader>
                             <DialogTitle className="text-white">Invite Members to Workspace</DialogTitle>
                             <DialogDescription className="text-[#797a7f]">Add members to workspace</DialogDescription>
                         </DialogHeader>
-                        <SearchWorkspace workspaceId={}/>
+                        <SearchWorkspace workspaceId={activeWorkspaceId}/>
                         <DialogFooter>
-                            <DialogClose>Cancel</DialogClose>
+                            <DialogClose className="text-red-500 border-none" style={{borderRadius: "0.3rem"}}>Cancel</DialogClose>
                         </DialogFooter>
                     </DialogContent>
                 </Dialog>

@@ -55,7 +55,7 @@ export const getUserWorkspaces = async () => {
 export const getUserNotifications = async () => {
     try {
         const user = await currentUser();
-        const notifications = await db.select({notificationId: notificationTable.id, notificationCreatedAt: notificationTable.createdAt, notificationTitle: notificationTable.title}).from(notificationTable).leftJoin(usersTable, eq(usersTable.id, notificationTable.userId)).where(eq(usersTable.clerkId, user!.id));
+        const notifications = await db.select({notificationId: notificationTable.id, notificationCreatedAt: notificationTable.createdAt, notificationTitle: notificationTable.title}).from(notificationTable).innerJoin(usersTable, eq(usersTable.id, notificationTable.userId)).where(eq(usersTable.clerkId, user!.id));
         return notifications;
     } catch (e) {
         console.log(e);
