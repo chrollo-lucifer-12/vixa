@@ -43,7 +43,8 @@ export const getUserVideos = async (workspaceId : string) => {
 export const getUserWorkspaces = async () => {
     try {
         const user = await currentUser();
-        const workspaces = await db.select({workspaceId: workspaceTable.id, workspaceTitle: workspaceTable.name, workspaceType: workspaceTable.type, memberId: memberTable.id, }).from(workspaceTable).leftJoin(usersTable, eq(usersTable.id, workspaceTable.userId)).leftJoin(memberTable, eq(memberTable.workspaceId, workspaceTable.id)).where(eq(usersTable.clerkId, user!.id));
+        const workspaces = await db.select({workspaceId: workspaceTable.id, workspaceTitle: workspaceTable.name, workspaceType: workspaceTable.type}).from(workspaceTable).innerJoin(usersTable, eq(usersTable.id, workspaceTable.userId)).where(eq(usersTable.clerkId, user!.id));
+        if (!workspaces) return [];
         return workspaces
     } catch (e) {
         console.log(e);

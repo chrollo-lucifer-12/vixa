@@ -8,8 +8,9 @@ import {
     useMutation,
     useQueryClient,
     QueryClient,
-    QueryClientProvider,
+    QueryClientProvider, HydrationBoundary, dehydrate,
 } from '@tanstack/react-query'
+import Sidebar from "@/components/global/sidebar";
 
 type Props = {
     params: {workspaceId : string}
@@ -53,7 +54,11 @@ const Layout = async ({params, children} : Props) => {
         queryFn: () => getUserNotifications(),
     })
 
-    return <div>{children}</div>
+    return <HydrationBoundary state={dehydrate(query)}>
+        <div className="flex h-screen w-screen">
+            <Sidebar activeWorkspaceId = {workspaceId} />
+        </div>
+    </HydrationBoundary>
 }
 
 export default Layout
