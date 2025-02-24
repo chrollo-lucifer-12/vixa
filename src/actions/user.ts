@@ -3,7 +3,7 @@
 import {currentUser} from "@clerk/nextjs/server";
 import db from "../db/index";
 import {folderTable, memberTable, notificationTable, usersTable, videoTable, workspaceTable} from "@/db/schema";
-import {eq} from "drizzle-orm";
+import {eq, like, or} from "drizzle-orm";
 import {v4} from "uuid"
 
 export const onAuthenticateUser = async () => {
@@ -57,6 +57,21 @@ export const getUserNotifications = async () => {
         const user = await currentUser();
         const notifications = await db.select({notificationId: notificationTable.id, notificationCreatedAt: notificationTable.createdAt, notificationTitle: notificationTable.title}).from(notificationTable).leftJoin(usersTable, eq(usersTable.id, notificationTable.userId)).where(eq(usersTable.clerkId, user!.id));
         return notifications;
+    } catch (e) {
+        console.log(e);
+        return []
+    }
+}
+
+export const searchMembers = async (query : string) => {
+    try {
+        const searchResults = await db.select({id : usersTable.id, firstName : usersTable.firstName, lastName : usersTable.lastName, email : usersTable.email, image : usersTable.image}).from(usersTable).where(or(
+            like(usersTable.firstName, `%${query}%`),
+            like(usersTable.lastName, `%${query}%`),
+            like(usersTable.email, `%${query}%`)
+        ))
+        if (searchResults.length > 0) return searchResults
+        return [];
     } catch (e) {
         console.log(e);
         return []
