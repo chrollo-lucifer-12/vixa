@@ -1,28 +1,30 @@
 import {SidebarInset, SidebarProvider, SidebarTrigger} from "@/components/ui/sidebar";
 import AppSidebar from "@/components/global/sidebar/app-sidebar";
 import {Separator} from "@/components/ui/separator";
+import React from "react";
+import {UserButton} from "@clerk/nextjs";
 
 interface SidebarProps {
     activeWorkspaceId : string
+    children: React.ReactNode
 }
 
-const Sidebar = ({activeWorkspaceId} : SidebarProps) => {
+const Sidebar = ({activeWorkspaceId, children} : SidebarProps) => {
     return <SidebarProvider>
-        <AppSidebar activeWorkspaceId={activeWorkspaceId}  />
+        <AppSidebar activeWorkspaceId={activeWorkspaceId}/>
         <SidebarInset>
-            <header className="flex h-16 shrink-0 items-center gap-2">
+            <header className="flex h-16 shrink-0 items-center gap-2 justify-between">
                 <div className="flex items-center gap-2 px-4">
                     <SidebarTrigger className="-ml-1 text-white hover:text-white"/>
-                    <Separator orientation="vertical" className="mr-2 h-4"/>
+                    <Separator orientation="vertical" className="mr-2 h-4 text-white"/>
+                </div>
+                <div className="mr-4">
+
+                <UserButton/>
                 </div>
             </header>
-            <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-                <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-                    <div className="aspect-video rounded-xl bg-[#18181a]"/>
-                    <div className="aspect-video rounded-xl bg-[#18181a]"/>
-                    <div className="aspect-video rounded-xl bg-[#18181a]"/>
-                </div>
-                <div className="min-h-[100vh] flex-1 rounded-xl bg-[#18181a] md:min-h-min"/>
+            <div className="min-h-[100vh] flex-1 m-4 rounded-xl bg-[#18181a] md:min-h-min">
+                {children}
             </div>
         </SidebarInset>
     </SidebarProvider>

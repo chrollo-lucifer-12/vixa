@@ -56,7 +56,7 @@ const Layout = async ({params, children} : Props) => {
 
     return <HydrationBoundary state={dehydrate(query)}>
         <div className="flex h-screen w-screen">
-            <Sidebar activeWorkspaceId = {workspaceId} />
+            <Sidebar activeWorkspaceId = {workspaceId} children={children} />
         </div>
     </HydrationBoundary>
 }

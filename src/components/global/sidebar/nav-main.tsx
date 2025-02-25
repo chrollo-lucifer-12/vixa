@@ -17,10 +17,6 @@ const NavMain = ({activeWorkspaceId} : NavMainProps) => {
     const pathName = usePathname();
     const router = useRouter();
 
-    const {data} = useQueryData(["user-notifications"], getUserNotifications)
-
-    const notifications = data as NotificationProps;
-
     return <SidebarGroup>
         <SidebarGroupLabel className="text-[#9f9fa1] font-bold">Menu</SidebarGroupLabel>
         <SidebarMenu>

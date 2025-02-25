@@ -4,6 +4,7 @@ import {currentUser} from "@clerk/nextjs/server";
 import db from "@/db";
 import {folderTable, memberTable, usersTable, workspaceTable} from "@/db/schema";
 import {and, eq, or} from "drizzle-orm";
+import {v4} from "uuid"
 
 export const verifyAccessToWorkspace = async (workspaceId : string) => {
     try {
@@ -28,5 +29,25 @@ export const getWorkspaceFolders = async (workspaceId : string) => {
     } catch (e) {
         console.log(e);
         return [];
+    }
+}
+
+export const CreateWorkspace = async (name : string) => {
+    try {
+        const user = await currentUser();
+        if (!user) {
+            return {status : 404};
+        }
+        const authorizedUser = await db.select().from(usersTable).where(eq(usersTable.clerkId, user.id));
+        const workspace = await db.insert(workspaceTable).values({
+            userId: authorizedUser[0].id,
+            type: "personal",
+            name,
+            id: v4()
+        }).returning();
+        if (workspace && workspace.length) return {status: 201}
+    } catch (e) {
+        console.log(e);
+        return {status: 400}
     }
 }
