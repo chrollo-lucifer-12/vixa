@@ -2,8 +2,8 @@
 
 import {currentUser} from "@clerk/nextjs/server";
 import db from "@/db";
-import {folderTable, memberTable, usersTable, workspaceTable} from "@/db/schema";
-import {and, eq, or} from "drizzle-orm";
+import {folderTable, memberTable, usersTable, videoTable, workspaceTable} from "@/db/schema";
+import {and, eq, or, sql} from "drizzle-orm";
 import {v4} from "uuid"
 
 export const verifyAccessToWorkspace = async (workspaceId : string) => {
@@ -24,7 +24,17 @@ export const verifyAccessToWorkspace = async (workspaceId : string) => {
 
 export const getWorkspaceFolders = async (workspaceId : string) => {
     try {
-        const folders = await db.select().from(folderTable).where(eq(folderTable.workspaceId, workspaceId));
+        const folders = await db
+            .select({
+                folder: folderTable,
+                videoCount: sql<number>`(
+      SELECT COUNT(*) FROM ${videoTable} 
+      WHERE ${videoTable.folderId} = ${folderTable.id}
+    )`.as("videoCount"),
+            })
+            .from(folderTable)
+            .where(eq(folderTable.workspaceId, workspaceId));
+
         return folders;
     } catch (e) {
         console.log(e);
@@ -49,5 +59,30 @@ export const CreateWorkspace = async (name : string) => {
     } catch (e) {
         console.log(e);
         return {status: 400}
+    }
+}
+
+export const renameFolders = async (folderId : string, name :string) => {
+    try {
+        const updatedFolder = await db.update(folderTable).set({name: name}).where(eq(folderTable.id, folderId));
+        return {status : 200}
+    } catch (e) {
+        console.log(e);
+        return {status : 401}
+    }
+}
+
+export const createFolder = async (workspaceId : string) => {
+    try {
+          await db.insert(folderTable).values({
+             id: v4(),
+             name:  "Untitled",
+             workspaceId: workspaceId,
+             createdAt: new Date().toISOString()
+         })
+         return {status : 200}
+    } catch (e) {
+        console.log(e);
+        return {status : 20}
     }
 }
