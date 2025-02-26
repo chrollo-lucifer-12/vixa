@@ -41,9 +41,12 @@ const Folders = ({workspaceId} : FoldersProps) => {
             <ScrollArea className="w-[800px] whitespace-nowrap">
                 <div className="flex ">
                     {
+                        folders.length ?
                         folders.map((folderData) => (
                             <Folder key={folderData.folder.id} title={folderData.folder.name!} count={folderData.videoCount} id={folderData.folder.id}/>
-                        ))
+                        )) : (
+                            <p className="text-center text-[#95969d]">No folders in this workspace</p>
+                            )
                     }
                 </div>
                 <ScrollBar orientation="horizontal" />

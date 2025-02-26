@@ -40,11 +40,6 @@ const Layout = async ({params, children} : Props) => {
     })
 
     await query.prefetchQuery({
-        queryKey: ["user-videos"],
-        queryFn: () => getUserVideos(workspaceId),
-    })
-
-    await query.prefetchQuery({
         queryKey: ["user-workspaces"],
         queryFn: () => getUserWorkspaces(),
     })

@@ -11,7 +11,7 @@ import WorkspaceForm from "@/components/global/workspace-form";
 const CreateWorkspace = () => {
     return <div className="mt-10">
         <Dialog>
-            <DialogTrigger className="bg-[#272729] hover:bg-[#272799] text-white pl-6 pr-6 pt-1 pb-1 text-lg font-semibold tracking-tight transition-colors first:mt-0" style={{borderRadius: "0.4rem"}}> Create Workspace</DialogTrigger>
+            <DialogTrigger className="bg-[#272729] hover:bg-[#272799] text-white pl-6 pr-6 pt-1 pb-1 text-lg font-semibold tracking-tight transition-colors first:mt-0" style={{borderRadius: "0.6rem"}}> Create Workspace</DialogTrigger>
             <DialogContent className="bg-[#09090b]">
                 <DialogHeader className="text-white">
                     <DialogTitle>Create A Workspace</DialogTitle>

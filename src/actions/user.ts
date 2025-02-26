@@ -30,9 +30,9 @@ export const onAuthenticateUser = async () => {
     }
 }
 
-export const getUserVideos = async (workspaceId : string) => {
+export const getUserVideos = async (folderId : string) => {
     try {
-        const videos = await db.select({videoId : videoTable.id, videoTitle: videoTable.title, videoCreatedAt: videoTable.createdAt, videoSource: videoTable.source, videoProcessing: videoTable.processing, workspaceId: videoTable.workspaceId, folderId: folderTable.id, folderName: folderTable.name}).from(videoTable).leftJoin(folderTable, eq(videoTable.folderId, folderTable.id)).where(eq(videoTable.workspaceId, workspaceId));
+        const videos = await db.select({videos : videoTable, creatorFirstName : usersTable.firstName, creatorLastName : usersTable.lastName, creatorImage : usersTable.image}).from(videoTable).innerJoin(usersTable, eq(usersTable.id,videoTable.userId)).where(eq(videoTable.folderId,folderId));
         return videos
     } catch (e) {
         console.log(e);
@@ -75,5 +75,14 @@ export const searchMembers = async (query : string) => {
     } catch (e) {
         console.log(e);
         return []
+    }
+}
+
+export const getFolderInfo  = async (folderId : string) => {
+    try {
+        const folderInfo = await db.select().from(folderTable).where(eq(folderTable.id, folderId));
+        return folderInfo[0];
+    } catch (e) {
+        console.log(e);
     }
 }

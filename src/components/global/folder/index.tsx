@@ -35,7 +35,6 @@ const Folder = ({title, count, id} : FolderProps) => {
     }
 
     const updateFolderName = (e : React.FocusEvent<HTMLInputElement> ) => {
-        console.log("rename");
         if (inputRef.current && folderCardRef.current) {
             if (!inputRef.current.contains(e.target as Node | null) && !folderCardRef.current.contains(e.target as Node | null)) {
                 if (inputRef.current.value) {
