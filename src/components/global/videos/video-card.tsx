@@ -1,10 +1,14 @@
 import Image from "next/image";
+import CopyLink from "@/components/global/videos/copy-link";
 
 interface VideoCardProps {
     videoId : string
     videoTitle : string
     createdAt : string
     videoSource :  string
+    creatorFirstName: string | null
+    creatorLastName: string | null
+    creatorImage: string | null
 }
 
 function timeDifference(date1: string | Date, date2: string | Date): string {
@@ -26,22 +30,27 @@ function timeDifference(date1: string | Date, date2: string | Date): string {
     }
 }
 
-const VideoCard = ({createdAt, videoId, videoSource, videoTitle} : VideoCardProps) => {
-    return <figure className="shrink-0 hover:bg-gray-800 p-3 transition duration-300 border-[#141416]" style={{borderRadius: "0.5rem"}}>
-        <div className="overflow-hidden" style={{borderRadius: "0.4rem"}}>
-            <Image
-                src={videoSource}
-                alt={`Photo by ${videoTitle}`}
-                className="object-cover"
-                width={200}
-                height={100}
-            />
+// add copy link component
+// component for thumbnail
+
+
+const VideoCard = ({createdAt, videoId, videoSource, videoTitle, creatorFirstName, creatorLastName, creatorImage} : VideoCardProps) => {
+    return <div className="w-[250px] flex flex-col bg-red-300 p-3" style={{borderRadius: "0.5rem"}}>
+        <video controls={false} preload="metadata">
+            <source src={`${process.env.NEXT_PUBLIC_CLOUD_FRONT_STREAM_URL}/${videoSource}#t=1`}/>
+        </video>
+        <div className="flex flex-col gap-y-2">
+            <div className="flex justify-between items-center">
+
+            <span>{videoTitle}</span>
+            <CopyLink videoId={videoId}/>
+            </div>
+            <div className="flex items-center gap-x-3">
+                <Image src={creatorImage!} alt="" width={30} height={30} className="rounded-full"/>
+                <span className="text-muted-foreground">{creatorFirstName} {creatorLastName}</span>
+            </div>
         </div>
-        <figcaption className="pt-2 text-xs text-muted-foreground text-[#6f6f75]">
-            <p>{videoTitle}</p>
-            <p>{timeDifference(createdAt, new Date().toISOString())}</p>
-        </figcaption>
-    </figure>
+    </div>
 }
 
 export default VideoCard

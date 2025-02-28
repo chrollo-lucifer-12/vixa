@@ -18,7 +18,8 @@ export type FolderProps = {
 }
 
 export type VideoProps = {
-    videos: {         id: string,
+    videos: {
+        id: string,
         title: string | null,
         description: string | null,
         source: string,
