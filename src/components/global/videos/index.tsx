@@ -23,7 +23,7 @@ const Videos = ({folderId, videosKey, workspaceId} : VideosProps) => {
             <p className="text-white">Videos</p>
         </div>
         <div className="flex mt-4">
-            <VideoCard videoId="dasdasda" videoTitle="sahil" createdAt="2025-01-01" videoSource="/vixa-logo.png" creatorFirstName="sahil" creatorLastName="singh" creatorImage="/vixa-logo.png" />
+
         </div>
     </div>
 }

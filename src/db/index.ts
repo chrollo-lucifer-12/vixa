@@ -1,9 +1,14 @@
-import { drizzle } from "drizzle-orm/node-postgres";
-import { Pool } from "pg";
+import postgres from "postgres";
+import {drizzle} from "drizzle-orm/postgres-js";
+import * as schema from "../db/schema"
 
-const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-});
-const db = drizzle(pool);
+if (!process.env.DATABASE_URL) {
+    console.log('🔴 no database URL');
+}
+
+const client = postgres(process.env.DATABASE_URL as string, {max : 5});
+
+
+const db = drizzle(client, {schema});
 
 export default db;

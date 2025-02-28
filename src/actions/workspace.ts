@@ -86,3 +86,14 @@ export const createFolder = async (workspaceId : string) => {
         return {status : 20}
     }
 }
+
+export const getPreviewVideo = async (videoId : string) => {
+    try {
+        const user = await currentUser();
+        if (!user) return;
+        const video = await db.select({videos : videoTable, creatorFirstName : usersTable.firstName, creatorLastName : usersTable.lastName, creatorImage : usersTable.image}).from(videoTable).innerJoin(usersTable,eq(usersTable.id, videoTable.userId)).where(eq(videoTable.id,videoId));
+        return video
+    } catch (e) {
+        console.log(e);
+    }
+}
