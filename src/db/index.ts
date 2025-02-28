@@ -6,7 +6,7 @@ if (!process.env.DATABASE_URL) {
     console.log('🔴 no database URL');
 }
 
-const client = postgres(process.env.DATABASE_URL as string, {max : 5});
+const client = postgres(process.env.DATABASE_URL as string, {max : 10});
 
 
 const db = drizzle(client, {schema});

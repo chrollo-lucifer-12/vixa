@@ -6,6 +6,7 @@ import Image from "next/image";
 import {Avatar, AvatarImage} from "@/components/ui/avatar";
 import {Button} from "@/components/ui/button";
 import {Plus} from "lucide-react";
+import {inviteMember} from "@/actions/user";
 
 interface SearchMembersProps {
     workspaceId : string
@@ -15,9 +16,8 @@ const SearchMembers = ({workspaceId} : SearchMembersProps) => {
 
     const {query, onSearchQuery, isFetching, onUsers} = useSearch("get-users", "USERS");
 
-    // const {mutate, isPending} = useMutationData(['invite-member'], (data:{receiverId : string; email : string}) => {
-    //   //wip : send invites
-    // });
+     const {mutate, isPending} = useMutationData(['invite-member'], (data:{receiverId : string;}) =>
+        inviteMember(workspaceId, data.receiverId));
 
     return <div>
         <Input onChange={onSearchQuery} value={query} placeholder="Search for members" className="text-white bg-[#272729] border-none" style={{borderRadius: "0.5rem"}} />
@@ -35,7 +35,9 @@ const SearchMembers = ({workspaceId} : SearchMembersProps) => {
                         </Avatar>
                             <p className="text-white">{user.email}</p>
                         </div>
-                        <Button className="text-black bg-white">Invite</Button>
+                        <Button onClick={() => {
+                            mutate({receiverId : user.id})
+                        }} className="text-black bg-white">Invite</Button>
                     </div>
                 ))}
             </div>

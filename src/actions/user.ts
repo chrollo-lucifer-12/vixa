@@ -2,7 +2,15 @@
 
 import {currentUser} from "@clerk/nextjs/server";
 import db from "../db/index";
-import {folderTable, memberTable, notificationTable, usersTable, videoTable, workspaceTable} from "@/db/schema";
+import {
+    folderTable,
+    inviteTable,
+    memberTable,
+    notificationTable,
+    usersTable,
+    videoTable,
+    workspaceTable
+} from "@/db/schema";
 import {eq, like, or} from "drizzle-orm";
 import {v4} from "uuid"
 
@@ -90,6 +98,33 @@ export const getFolderInfo  = async (folderId : string) => {
     try {
         const folderInfo = await db.select().from(folderTable).where(eq(folderTable.id, folderId));
         return folderInfo[0];
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+export const inviteMember = async (workspaceId : string, receiverId : string) => {
+    try {
+        const user = await currentUser();
+        if (!user) return;
+        const findSender = await db.query.usersTable.findFirst({
+            where : eq(usersTable.clerkId, user.id)
+        })
+        if (findSender) {
+            const workspace = await db.query.workspaceTable.findFirst({
+                where: eq(workspaceTable.id, workspaceId)
+            })
+            if (workspace) {
+                await db.insert(inviteTable).values({
+                    id : v4(),
+                    senderId : findSender.id,
+                    receiverId,
+                    workspaceId,
+                    content: `You are invited to join ${workspace.name} by ${findSender.firstName}`,
+                    accepted: false
+                })
+            }
+        }
     } catch (e) {
         console.log(e);
     }
