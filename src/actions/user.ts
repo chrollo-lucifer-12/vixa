@@ -40,6 +40,7 @@ export const onAuthenticateUser = async () => {
 
 export const getUserVideos = async (folderId : string) => {
     try {
+
         const videos = await db.select({videos : videoTable, creatorFirstName : usersTable.firstName, creatorLastName : usersTable.lastName, creatorImage : usersTable.image}).from(videoTable).innerJoin(usersTable, eq(usersTable.id,videoTable.userId)).where(eq(videoTable.folderId,folderId));
         return videos
     } catch (e) {

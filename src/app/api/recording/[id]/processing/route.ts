@@ -20,11 +20,15 @@ export async function POST(req : NextRequest, {params } : {params : {id : string
 
         const findWorkspace = await db.query.workspaceTable.findFirst({where : eq(workspaceTable.userId, findUser.id)});
 
-        let findFolder = await db.select().from(folderTable).where(eq(folderTable.workspaceId, findWorkspace!.id));
+        console.log(findWorkspace);
 
-        if (!findFolder) {
-            findFolder = await db.insert(folderTable).values({workspaceId: findWorkspace!.id, createdAt: new Date().toISOString(), id: v4(), name: "All Videos"}).returning();
+        let findFolder = await db.select().from(folderTable).where(eq(folderTable.name, "Unedited Videos"));
+
+        if (!findFolder || !findFolder.length) {
+            findFolder = await db.insert(folderTable).values({workspaceId: findWorkspace!.id, createdAt: new Date().toISOString(), id: v4(), name: "Unedited Videos"}).returning();
         }
+
+        console.log(findFolder);
 
         const startProcessingVideo = await db.insert(videoTable).values({
             id: v4(),

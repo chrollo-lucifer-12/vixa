@@ -8,7 +8,6 @@ export async function POST(req : NextRequest, {params} : {params : {id : string}
     try {
         const body = await req.json();
         const {id} = await params
-        console.log("video id" ,id);
 
         const completeProcessing = await db.update(videoTable).set({processing: false,}).where(eq(videoTable.id,id)).returning();
         console.log(completeProcessing);
