@@ -38,6 +38,11 @@ export const onAuthenticateUser = async () => {
     }
 }
 
+export const getUserFromClerkId = async (clerkId : string) => {
+    const user =  db.query.usersTable.findFirst({where : eq(usersTable.clerkId, clerkId)});
+    return user;
+}
+
 export const getUserVideos = async (folderId : string) => {
     try {
 

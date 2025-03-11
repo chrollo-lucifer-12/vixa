@@ -6,6 +6,7 @@ import { Manrope } from "next/font/google";
 import "./globals.css";
 import ReactQueryProvider from "../react-query/index"
 import React from "react";
+import { Toaster } from "@/components/ui/sonner"
 
 const manrope = Manrope({
     subsets : ["latin"]
@@ -30,6 +31,7 @@ export default function RootLayout({
             <ReactQueryProvider>
                 {children}
             </ReactQueryProvider>
+            <Toaster className="bg-black text-white" />
             </body>
             </html>
         </ClerkProvider>

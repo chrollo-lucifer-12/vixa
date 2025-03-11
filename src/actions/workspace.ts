@@ -97,3 +97,25 @@ export const getPreviewVideo = async (videoId : string) => {
         console.log(e);
     }
 }
+
+export const editVideo = async (videoId : string, folderId ?: string, title ?: string, description ?: string, summary ?: string) => {
+    try {
+        const updateFields: Record<string, string> = {};
+
+        if (folderId) updateFields.folderId = folderId;
+        if (title) updateFields.title = title;
+        if (description) updateFields.description = description;
+        if (summary) updateFields.summary = summary;
+
+        // If there are no fields to update, exit early
+        if (Object.keys(updateFields).length === 0) {
+            console.log("No fields provided for update.");
+            return;
+        }
+
+        // Perform the update
+        await db.update(videoTable).set(updateFields).where(eq(videoTable.id, videoId));
+    } catch (e) {
+        console.log(e);
+    }
+}

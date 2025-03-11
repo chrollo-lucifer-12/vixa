@@ -11,7 +11,7 @@ interface FoldersProps {
     workspaceId : string
 }
 
-type FolderProps =
+export type FolderProps =
     {
         folder: {
             id: string,
