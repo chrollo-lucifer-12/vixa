@@ -135,3 +135,19 @@ export const inviteMember = async (workspaceId : string, receiverId : string) =>
         console.log(e);
     }
 }
+
+export const videoNotification = async (videoId : string, title : string) => {
+    try {
+        const video = await db.query.videoTable.findFirst({where : eq(videoTable.id, videoId)});
+        const creator = await db.query.usersTable.findFirst({where : eq(usersTable.id, video!.userId!)});
+
+        await db.insert(notificationTable).values({
+            id : v4(),
+            userId : creator!.id,
+            title,
+            createdAt: new Date().toISOString()
+        })
+    } catch (e) {
+        console.log(e);
+    }
+}

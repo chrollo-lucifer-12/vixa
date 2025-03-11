@@ -2,7 +2,7 @@ import {dehydrate, HydrationBoundary, QueryClient} from "@tanstack/react-query";
 import {getPreviewVideo, getWorkspaceFolders} from "@/actions/workspace";
 import VideoPreview from "@/components/global/videos/video-preview";
 import {currentUser} from "@clerk/nextjs/server";
-import {getUserFromClerkId, getUserWorkspaces} from "@/actions/user";
+import {getUserFromClerkId, getUserWorkspaces, videoNotification} from "@/actions/user";
 
 interface VideoPageProps {
     params : {videoId : string}
@@ -10,6 +10,8 @@ interface VideoPageProps {
 
 const VideoPage = async ({params} : VideoPageProps) => {
     const {videoId} = await params;
+
+    await videoNotification(videoId, "Someone watched your video")
 
     const query = new QueryClient();
 

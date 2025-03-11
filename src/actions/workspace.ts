@@ -5,6 +5,7 @@ import db from "@/db";
 import {folderTable, memberTable, usersTable, videoTable, workspaceTable} from "@/db/schema";
 import {and, eq, or, sql} from "drizzle-orm";
 import {v4} from "uuid"
+import {videoNotification} from "@/actions/user";
 
 export const verifyAccessToWorkspace = async (workspaceId : string) => {
     try {
@@ -115,6 +116,8 @@ export const editVideo = async (videoId : string, folderId ?: string, title ?: s
 
         // Perform the update
         await db.update(videoTable).set(updateFields).where(eq(videoTable.id, videoId));
+
+        await videoNotification(videoId, "You edited your video");
     } catch (e) {
         console.log(e);
     }
