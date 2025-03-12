@@ -7,6 +7,29 @@ import {and, eq, or, sql} from "drizzle-orm";
 import {v4} from "uuid"
 import {videoNotification} from "@/actions/user";
 
+
+export const getFolderWithVideos = async (workspaceId : string) => {
+    try {
+        const data = await db
+            .select({
+                folder: folderTable,
+                video: {
+                    id : videoTable.id,
+                    title: videoTable.title,
+                    creator : videoTable.createdAt,
+                    folderId : videoTable.folderId
+                },
+            })
+            .from(folderTable)
+            .innerJoin(videoTable, eq(videoTable.folderId, folderTable.id))
+            .where(eq(folderTable.workspaceId, workspaceId));
+        return data;
+    } catch (e) {
+        console.log(e);
+        return [];
+    }
+}
+
 export const verifyAccessToWorkspace = async (workspaceId : string) => {
     try {
         const user = await currentUser();

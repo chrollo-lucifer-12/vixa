@@ -40,3 +40,9 @@ export type VideoCommentProps =  {     commentTitle: string | null,
     commentCreatedAt: string | null,
     commentCreatorName: string | null,
     commentCreatorImage: string | null }[]
+
+export type FolderWithVideosProps = {     folder: {         id: string,
+        name: string | null,
+        createdAt: string | null,
+        workspaceId: string | null,
+    } ,    video: {   id: string   ,      title: string | null ,        creator: string | null ,        folderId: string | null     } }[]

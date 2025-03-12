@@ -3,10 +3,6 @@
 import {SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton} from "@/components/ui/sidebar";
 import {MENU_ITEMS} from "@/constants/index";
 import {usePathname, useRouter} from "next/navigation";
-import {useState} from "react";
-import {useQueryData} from "@/hooks/useQueryData";
-import {getUserNotifications} from "@/actions/user";
-import {NotificationProps} from "@/types/index.type";
 
 interface NavMainProps {
     activeWorkspaceId : string

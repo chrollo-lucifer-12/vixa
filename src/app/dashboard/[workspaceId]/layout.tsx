@@ -1,7 +1,7 @@
 import React from "react";
 import {getUserNotifications, getUserVideos, getUserWorkspaces, onAuthenticateUser} from "@/actions/user";
 import {redirect} from "next/navigation";
-import {getWorkspaceFolders, verifyAccessToWorkspace} from "@/actions/workspace";
+import {getFolderWithVideos, getWorkspaceFolders, verifyAccessToWorkspace} from "@/actions/workspace";
 import UnauthorizedPage from "@/components/global/no-access/page";
 import {
     useQuery,
@@ -49,7 +49,10 @@ const Layout = async ({params, children} : Props) => {
         queryFn: () => getUserNotifications(),
     })
 
-
+    await query.prefetchQuery({
+        queryKey : ["folder-videos"],
+        queryFn : () => getFolderWithVideos(workspaceId)
+    })
 
     return <HydrationBoundary state={dehydrate(query)}>
         <div className="flex h-screen w-screen">
