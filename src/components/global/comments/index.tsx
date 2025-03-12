@@ -6,6 +6,11 @@ import { useState } from "react";
 import {Input} from "@/components/ui/input";
 import {VideoCommentProps} from "@/types/index.type";
 import {useMutationData, useMutationDataState} from "@/hooks/useMutationData";
+import { Skeleton } from "@/components/ui/skeleton"
+import {ScrollArea, ScrollBar} from "@/components/ui/scroll-area";
+import CommentCard from "@/components/global/comments/comment-card";
+import {Separator} from "@/components/ui/separator";
+
 
 interface CommentsProps {
     videoId: string;
@@ -62,16 +67,23 @@ const Comments = ({ videoId }: CommentsProps) => {
         >
             <div className="h-[80%] text-white p-3" style={{borderRadius : "0.3rem"}}>
                 {
-                    !comments.length ?  (<span className="text-white">Be the first one to comment</span>) : (<div>
-                        {
-                            comments.map((comment) => (
-                                <p>{comment.commentTitle}</p>
-                            ))
-                        }
-                    </div>)
+                    !comments.length ? (<p>Be the first to comment</p>) : (
+                        <ScrollArea className="h-full w-full">
+                            {
+                                comments.map((comment,i) => (
+                                    <>
+                                    <CommentCard key={i} name={comment.commentCreatorName!} title={comment.commentTitle!} image={comment.commentCreatorImage!} createdAt={comment.commentCreatedAt!}/>
+                                        <Separator className="my-2 text-white" />
+                                    </>
+                                ))
+                            }
+                        </ScrollArea>
+                    )
                 }
             </div>
-            <Input disabled={isPending} value={commentInput} onChange={(e) => {setCommentInput(e.target.value)}} className="text-white bg-transparent border-[#1c1b1e] h-[20%]" onKeyDown={handleAddComment} />
+            <Input disabled={isPending} value={commentInput} onChange={(e) => {
+                setCommentInput(e.target.value)
+            }} className="text-white bg-transparent border-[#1c1b1e] h-[20%]" onKeyDown={handleAddComment}/>
         </div>
     );
 };

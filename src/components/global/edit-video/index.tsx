@@ -47,8 +47,8 @@ const EditVideo = ({workspaceId, videoId, videoDesc, videoSummary, videoTitle} :
 
     return <div>
         <Dialog>
-            <DialogTrigger><Button className="bg-white hover:bg-white"
-                                   style={{borderRadius: "0.4rem"}}>Edit</Button></DialogTrigger>
+            <DialogTrigger><p className="bg-white hover:bg-white"
+                                   style={{borderRadius: "0.4rem"}}>Edit</p></DialogTrigger>
             <DialogContent className="bg-[#09090b] border-[#222224]" style={{borderRadius: "0.2rem"}}>
                 <DialogHeader>
                     <DialogTitle className={"text-white"}>Edit Video</DialogTitle>

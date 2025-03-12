@@ -32,6 +32,6 @@ export const addComment = async (videoId : string, comment : string) => {
             videoId
         })
     } catch (e) {
-        console.log(e.errors);
+        console.log(e);
     }
 }
