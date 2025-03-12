@@ -49,6 +49,8 @@ const Layout = async ({params, children} : Props) => {
         queryFn: () => getUserNotifications(),
     })
 
+
+
     return <HydrationBoundary state={dehydrate(query)}>
         <div className="flex h-screen w-screen">
             <Sidebar activeWorkspaceId = {workspaceId} children={children} />

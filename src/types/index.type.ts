@@ -35,3 +35,8 @@ export type VideoProps = {
     creatorLastName: string | null ,
     creatorImage: string | null
 }[]
+
+export type VideoCommentProps =  {     commentTitle: string | null,
+    commentCreatedAt: string | null,
+    commentCreatorName: string | null,
+    commentCreatorImage: string | null }[]

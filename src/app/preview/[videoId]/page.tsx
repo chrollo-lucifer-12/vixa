@@ -3,6 +3,7 @@ import {getPreviewVideo, getWorkspaceFolders} from "@/actions/workspace";
 import VideoPreview from "@/components/global/videos/video-preview";
 import {currentUser} from "@clerk/nextjs/server";
 import {getUserFromClerkId, getUserWorkspaces, videoNotification} from "@/actions/user";
+import {getVideoComments} from "@/actions/video";
 
 interface VideoPageProps {
     params : {videoId : string}
@@ -29,6 +30,11 @@ const VideoPage = async ({params} : VideoPageProps) => {
     await query.prefetchQuery({
         queryKey: ["workspace-folders"],
         queryFn: () => getWorkspaceFolders(workspaces[0].workspaceId)
+    })
+
+    await query.prefetchQuery({
+        queryKey : ["video-comments"],
+        queryFn : () => getVideoComments(videoId)
     })
 
     return <HydrationBoundary state={dehydrate(query)}>

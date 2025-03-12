@@ -5,6 +5,7 @@ import {VideoProps} from "@/types/index.type";
 import {timeDifference} from "@/components/global/videos/video-card";
 import CopyLink from "@/components/global/videos/copy-link";
 import EditVideo from "@/components/global/edit-video";
+import Comments from "@/components/global/comments";
 
 
 interface VideoPreviewProps {
@@ -15,13 +16,14 @@ interface VideoPreviewProps {
 
 const VideoPreview = ({videoId, userId, workspaceId} : VideoPreviewProps) => {
 
-    // wip : notification : video, complete this
+
 
     const { data} = useQueryData(["preview-video"], () => getPreviewVideo(videoId));
 
     const video = data as VideoProps
 
     return <div className="grid grid-cols-1 xl:grid-cols-2 p-10 lg:px-20 lg:py-10 overflow-y-auto gap-5">
+
         <div className="flex flex-col lg:col-span-2 gap-y-10">
             <div >
                 <div className="flex gap-x-5 items-start justify-between">
@@ -54,6 +56,7 @@ const VideoPreview = ({videoId, userId, workspaceId} : VideoPreviewProps) => {
                 </p>
             </div>
         </div>
+        <Comments videoId={videoId}/>
         <div className="lg:col-span-1 flex flex-col gap-y-16">
             <div className="flex justify-end gap-x-3">
                 <CopyLink videoId={video[0].videos.id}/>

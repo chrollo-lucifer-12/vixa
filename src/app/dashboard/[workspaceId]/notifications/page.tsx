@@ -6,7 +6,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 
 const Notifications  =  () => {
 
-     const {data} = useQueryData(["user-notifications"], getUserNotifications)
+     const {data} = useQueryData(["user-notification"], getUserNotifications)
     //
     const notifications = data as NotificationProps
 
@@ -18,10 +18,13 @@ const Notifications  =  () => {
                 notifications.map((n, index) => (
                     <div
                         key={index}
-                        className="aspect-video h-12 w-[60%] rounded-lg bg-[#272729]"
+                        className="aspect-video h-12 w-[60%] rounded-lg bg-[#272729] flex items-center"
                         style={{borderRadius: "1rem"}}
                     >
-                        <p>{n.notificationTitle}</p>
+                        <span className="flex items-center justify-between w-full">
+                        <p className="ml-5">{n.notificationTitle}</p>
+                        <p className="mr-5">{n.notificationCreatedAt}</p>
+                        </span>
                     </div>
                 ))
             }

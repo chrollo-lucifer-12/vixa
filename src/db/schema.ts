@@ -56,6 +56,14 @@ export const videoTable = pgTable("video", {
     summary: text("summary")
 })
 
+export const commentTable = pgTable("comment", {
+    id: uuid("id").primaryKey().notNull().defaultRandom(),
+    title: text("title"),
+    userId: uuid("user_id").references(() => usersTable.id),
+    videoId : uuid("video_id").references(() => videoTable.id),
+    createdAt: date("created_at"),
+})
+
 export const memberTable = pgTable("member", {
     id: uuid("id").primaryKey().notNull().defaultRandom(),
     userId: uuid("user_id").references(() => usersTable.id),
@@ -83,6 +91,7 @@ export const userRelations = relations(usersTable, ({one,many}) => ({
     media: one(mediaTable, {fields: [usersTable.id], references: [mediaTable.userId]}),
     workspaces: many(workspaceTable),
     videos: many(videoTable),
+    comments : many(commentTable),
     members: many(memberTable),
     notifications: many(notificationTable),
     inviteSent: one(inviteTable, {fields: [usersTable.id], references: [inviteTable.senderId]}),
@@ -109,7 +118,13 @@ export const folderRelations = relations(folderTable, ({one,many}) => ({
 export const videoRelations = relations(videoTable, ({one, many}) => ({
     user: one(usersTable, {fields: [videoTable.userId], references: [usersTable.id]}),
     workspace: one(workspaceTable, {fields: [videoTable.workspaceId], references: [workspaceTable.id]}),
-    folder: one(folderTable, {fields: [videoTable.folderId], references: [folderTable.id]})
+    folder: one(folderTable, {fields: [videoTable.folderId], references: [folderTable.id]}),
+    videos : many(commentTable)
+}))
+
+export const commentRelations = relations(commentTable, ({one}) => ({
+    user : one(usersTable, {fields : [commentTable.userId], references : [usersTable.id]}),
+    video : one(videoTable, {fields : [commentTable.videoId], references : [videoTable.id]})
 }))
 
 export const memberRelations = relations(memberTable, ({many, one}) => ({
