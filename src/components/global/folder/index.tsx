@@ -35,24 +35,30 @@ const Folder = ({title, count, id} : FolderProps) => {
     }
 
     const updateFolderName = (e : React.FocusEvent<HTMLInputElement> ) => {
-        if (inputRef.current && folderCardRef.current) {
-            if (!inputRef.current.contains(e.target as Node | null) && !folderCardRef.current.contains(e.target as Node | null)) {
-                if (inputRef.current.value) {
-                    mutate({name : inputRef.current.value})
-                    setOnRename(false);
-                }
-                else {
-                    setOnRename(false);
-                }
-            }
+        if (!inputRef.current?.value.trim()) {
+            setOnRename(false);
+            return;
         }
+        mutate({ name: inputRef.current.value });
     }
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            if (inputRef.current?.value.trim()) {
+                mutate({ name: inputRef.current.value });
+            }
+            setOnRename(false);
+        }
+    };
 
     return <div ref={folderCardRef} className="flex group justify-between w-[150px] items-center text-[#95969d] cursor-pointer p-3 hover:bg-gray-200 transition duration-300" style={{borderRadius: "0.6rem"}} onClick={handleFolderClick}>
         <div className="flex flex-col">
             {
-                onRename ? (<Input onBlur={(e) => updateFolderName(e)} ref={inputRef} className="border-none text-white" />) : (
-                    <span onClick={(e) => e.stopPropagation()} onDoubleClick={handleNameDoubleClick}>{title}</span>)
+                onRename ? (<Input onKeyDown={handleKeyDown}  onBlur={(e) => updateFolderName(e)} ref={inputRef} className="border-none text-white" />) : (
+                    <span onClick={(e) => e.stopPropagation()} onDoubleClick={handleNameDoubleClick}>{
+                        isPending ? ("changing name") : title
+                    }</span>)
             }
             <span>{count} videos</span>
         </div>

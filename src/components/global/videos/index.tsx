@@ -4,6 +4,7 @@ import {getUserVideos} from "@/actions/user";
 import {VideoProps} from "@/types/index.type";
 import {Video} from "lucide-react";
 import VideoCard from "@/components/global/videos/video-card";
+import {Skeleton} from "@/components/ui/skeleton";
 
 interface VideosProps {
     workspaceId : string
@@ -13,7 +14,7 @@ interface VideosProps {
 
 const Videos = ({folderId, videosKey, workspaceId} : VideosProps) => {
 
-    const {data} = useQueryData(["folder-videos"], () => getUserVideos(folderId))
+    const {data, isFetching} = useQueryData(["folder-videos"], () => getUserVideos(folderId))
     console.log(data);
     const allVideos = data as VideoProps
     //console.log( "all videos", allVideos);
@@ -26,6 +27,7 @@ const Videos = ({folderId, videosKey, workspaceId} : VideosProps) => {
         <div className="flex mt-4">
             {
                 allVideos.map((video, i) => (
+                    isFetching ? <Skeleton key={i} className={"w-[250px] h-[250px]"} /> :
                     <VideoCard key={i} videoId={video.videoId} videoTitle={video.videoTitle || "No Title"} createdAt={video.videoCreatedAt!} videoSource={video.videoSource} creatorFirstName={video.creatorFirstName}
                                creatorLastName={video.creatorLastName} creatorImage={video.creatorImage}/>
                 ))
