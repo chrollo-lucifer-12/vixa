@@ -13,10 +13,10 @@ interface VideosProps {
 
 const Videos = ({folderId, videosKey, workspaceId} : VideosProps) => {
 
-    const {data} = useQueryData([videosKey], () => getUserVideos(folderId))
-
+    const {data} = useQueryData(["folder-videos"], () => getUserVideos(folderId))
+    console.log(data);
     const allVideos = data as VideoProps
-
+    //console.log( "all videos", allVideos);
 
     return <div className="mt-2">
         <div className="flex gap-x-3">
@@ -26,7 +26,7 @@ const Videos = ({folderId, videosKey, workspaceId} : VideosProps) => {
         <div className="flex mt-4">
             {
                 allVideos.map((video, i) => (
-                    <VideoCard key={i} videoId={video.videos.id} videoTitle={video.videos.title || "No Title"} createdAt={video.videos.createdAt!} videoSource={video.videos.source} creatorFirstName={video.creatorFirstName}
+                    <VideoCard key={i} videoId={video.videoId} videoTitle={video.videoTitle || "No Title"} createdAt={video.videoCreatedAt!} videoSource={video.videoSource} creatorFirstName={video.creatorFirstName}
                                creatorLastName={video.creatorLastName} creatorImage={video.creatorImage}/>
                 ))
             }

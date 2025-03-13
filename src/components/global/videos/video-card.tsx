@@ -53,7 +53,7 @@ const VideoCard = ({createdAt, videoId, videoSource, videoTitle, creatorFirstNam
                 <Image src={creatorImage!} alt="" width={30} height={30} className="rounded-full"/>
                 <span className="text-muted-foreground">{creatorFirstName} {creatorLastName}</span>
             </div>
-            <span className="text-xs">{timeDifference(createdAt, new Date().toISOString())}</span>
+            {/*<span className="text-xs">{timeDifference(createdAt, new Date().toISOString())}</span>*/}
         </div>
     </div>
 }

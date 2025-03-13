@@ -1,5 +1,11 @@
 import React from "react";
-import {getUserNotifications, getUserVideos, getUserWorkspaces, onAuthenticateUser} from "@/actions/user";
+import {
+    getUserInvites,
+    getUserNotifications,
+    getUserVideos,
+    getUserWorkspaces,
+    onAuthenticateUser
+} from "@/actions/user";
 import {redirect} from "next/navigation";
 import {getFolderWithVideos, getWorkspaceFolders, verifyAccessToWorkspace} from "@/actions/workspace";
 import UnauthorizedPage from "@/components/global/no-access/page";
@@ -52,6 +58,11 @@ const Layout = async ({params, children} : Props) => {
     await query.prefetchQuery({
         queryKey : ["folder-videos"],
         queryFn : () => getFolderWithVideos(workspaceId)
+    })
+
+    await query.prefetchQuery({
+        queryKey : ["user-invites"],
+        queryFn : () => getUserInvites()
     })
 
     return <HydrationBoundary state={dehydrate(query)}>

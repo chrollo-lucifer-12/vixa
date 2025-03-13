@@ -11,7 +11,7 @@ import {
     videoTable,
     workspaceTable
 } from "@/db/schema";
-import {eq, like, or} from "drizzle-orm";
+import {and, eq, like, or} from "drizzle-orm";
 import {v4} from "uuid"
 
 export const onAuthenticateUser = async () => {
@@ -45,9 +45,10 @@ export const getUserFromClerkId = async (clerkId : string) => {
 
 export const getUserVideos = async (folderId : string) => {
     try {
-
-        const videos = await db.select({videos : videoTable, creatorFirstName : usersTable.firstName, creatorLastName : usersTable.lastName, creatorImage : usersTable.image}).from(videoTable).innerJoin(usersTable, eq(usersTable.id,videoTable.userId)).where(eq(videoTable.folderId,folderId));
-        return videos
+        const user = await currentUser();
+        if (!user) return [];
+        const videos = await db.select({videoId : videoTable.id, videoTitle : videoTable.title, videoCreatedAt : videoTable.createdAt, videoSource  : videoTable.source, creatorFirstName : usersTable.firstName, creatorLastName : usersTable.lastName, creatorImage : usersTable.image}).from(videoTable).innerJoin(usersTable,eq(videoTable.userId,usersTable.id)).where(eq(videoTable.folderId,folderId))
+        return videos;
     } catch (e) {
         console.log(e);
         return []
@@ -138,14 +139,51 @@ export const inviteMember = async (workspaceId : string, receiverId : string) =>
 
 export const videoNotification = async (videoId : string, title : string) => {
     try {
+
+
+
         const video = await db.query.videoTable.findFirst({where : eq(videoTable.id, videoId)});
         const creator = await db.query.usersTable.findFirst({where : eq(usersTable.id, video!.userId!)});
+
+        const notif = await db.query.notificationTable.findFirst({where : eq(notificationTable.userId, creator!.id)});
+        if (notif) return;
 
         await db.insert(notificationTable).values({
             id : v4(),
             userId : creator!.id,
             title,
             createdAt: new Date().toISOString()
+        })
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+export const getUserInvites = async () => {
+    try {
+        const user = await currentUser();
+        if (!user) return [];
+        const findUser = await db.query.usersTable.findFirst({where : eq(usersTable.clerkId,user.id)})
+        if (!findUser) return [];
+
+        const invites = await db.select().from(inviteTable).innerJoin(workspaceTable, eq(inviteTable.workspaceId, workspaceTable.id)).where(and(eq(inviteTable.receiverId, findUser.id), eq(inviteTable.accepted, false)));
+        return invites;
+    } catch (e) {
+        console.log(e);
+        return []
+    }
+}
+
+export const updateInvite = async (inviteId : string) => {
+    try {
+        const invite = await db.query.inviteTable.findFirst({where : eq(inviteTable.id, inviteId)});
+        if (!invite) return;
+        await db.update(inviteTable).set({accepted : true}).where(eq(inviteTable.id, inviteId))
+        await db.insert(memberTable).values({
+            id: v4(),
+            createdAt: new Date().toISOString(),
+            userId: invite.receiverId,
+            workspaceId: invite.workspaceId,
         })
     } catch (e) {
         console.log(e);

@@ -126,7 +126,7 @@ export const editVideo = async (videoId : string, folderId ?: string, title ?: s
     try {
         const updateFields: Record<string, string> = {};
 
-        if (folderId) updateFields.folderId = folderId;
+        if (folderId) updateFields.folder_id = folderId;
         if (title) updateFields.title = title;
         if (description) updateFields.description = description;
         if (summary) updateFields.summary = summary;

@@ -1,7 +1,7 @@
 "use client"
 import {useQueryData} from "@/hooks/useQueryData";
 import {getPreviewVideo} from "@/actions/workspace";
-import {VideoProps} from "@/types/index.type";
+import {SingleVideoProps, VideoProps} from "@/types/index.type";
 import {timeDifference} from "@/components/global/videos/video-card";
 import CopyLink from "@/components/global/videos/copy-link";
 import EditVideo from "@/components/global/edit-video";
@@ -17,10 +17,9 @@ interface VideoPreviewProps {
 const VideoPreview = ({videoId, userId, workspaceId} : VideoPreviewProps) => {
 
 
-
     const { data} = useQueryData(["preview-video"], () => getPreviewVideo(videoId));
 
-    const video = data as VideoProps
+    const video = data as SingleVideoProps
 
     return <div className="grid grid-cols-1 xl:grid-cols-2 p-10 lg:px-20 lg:py-10 overflow-y-auto gap-5">
 

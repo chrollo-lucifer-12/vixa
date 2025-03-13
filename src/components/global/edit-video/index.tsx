@@ -41,9 +41,7 @@ const EditVideo = ({workspaceId, videoId, videoDesc, videoSummary, videoTitle} :
 
     const {data, isFetched} = useQueryData(["workspace-folders"], () => getWorkspaceFolders(workspaceId));
     const folders = data as FolderProps
-    const {mutate, isPending} = useMutationData(["edit-video"], async () => {await editVideo(videoId, folderId, title,desc,summary)} , "folder-videos")
-
-
+    const {mutate, isPending} = useMutationData(["edit-video"], async (data) => {await editVideo(videoId, data.folderId, data.title, data.desc,data.summary)} , "preview-video")
 
     return <div>
         <Dialog>
@@ -114,7 +112,7 @@ const EditVideo = ({workspaceId, videoId, videoDesc, videoSummary, videoTitle} :
                     </div>
                 </div>
                 <DialogFooter>
-                    <Button onClick={() => mutate({description : desc, title, summary, folderId})} disabled={isPending} className="bg-white hover:bg-white" type="submit" style={{borderRadius: "0.3rem"}}>
+                    <Button onClick={() => mutate({desc, title, summary, folderId})} disabled={isPending} className="bg-white hover:bg-white" type="submit" style={{borderRadius: "0.3rem"}}>
                         {
                             isPending ? "Saving" : "Save Changes"
                         }

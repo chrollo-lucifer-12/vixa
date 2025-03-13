@@ -6,7 +6,8 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 
 const Notifications  =  () => {
 
-     const {data} = useQueryData(["user-notification"], getUserNotifications)
+    const {data} = useQueryData(["user-notification"], getUserNotifications)
+
     //
     const notifications = data as NotificationProps
 
