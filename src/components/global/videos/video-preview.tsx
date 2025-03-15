@@ -12,9 +12,10 @@ interface VideoPreviewProps {
     videoId : string
     userId : string
     workspaceId : string
+    permission : boolean
 }
 
-const VideoPreview = ({videoId, userId, workspaceId} : VideoPreviewProps) => {
+const VideoPreview = ({videoId, userId, workspaceId, permission} : VideoPreviewProps) => {
 
 
     const { data} = useQueryData(["preview-video"], () => getPreviewVideo(videoId));
@@ -37,9 +38,8 @@ const VideoPreview = ({videoId, userId, workspaceId} : VideoPreviewProps) => {
                     <p className="text-[#9d9d9d]">
                         {timeDifference(new Date(), video[0].videos.createdAt!)}
                     </p>
-                    {
-                        video[0].videos.userId === userId &&  <EditVideo workspaceId={workspaceId} videoId={videoId} videoTitle={video[0].videos.title!} videoDesc={video[0].videos.description!} videoSummary={video[0].videos.summary!} />
-                    }
+                    {<EditVideo workspaceId={workspaceId} videoId={videoId} videoTitle={video[0].videos.title!} videoDesc={video[0].videos.description!} videoSummary={video[0].videos.summary!} />}
+
                 </span>
 
             </div>

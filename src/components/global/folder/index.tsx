@@ -57,7 +57,7 @@ const Folder = ({title, count, id} : FolderProps) => {
             {
                 onRename ? (<Input onKeyDown={handleKeyDown}  onBlur={(e) => updateFolderName(e)} ref={inputRef} className="border-none text-white" />) : (
                     <span onClick={(e) => e.stopPropagation()} onDoubleClick={handleNameDoubleClick}>{
-                        isPending ? ("changing name") : title
+                        isPending ? ("changing name") : title.substring(0,5)
                     }</span>)
             }
             <span>{count} videos</span>

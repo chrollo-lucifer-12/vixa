@@ -20,7 +20,6 @@ const Comments = ({ videoId }: CommentsProps) => {
 
     const { data, isFetching } = useQueryData(["video-comments"], () => getVideoComments(videoId));
     const {mutate, isPending} = useMutationData(["update-comments"], async (data: {comment : string}) => {await addComment(videoId, data.comment)}, "video-comments")
-    const {latestVariables} = useMutationDataState(["update-comments"])
     const comments = data as VideoCommentProps
     const [commentInput, setCommentInput] = useState("")
 

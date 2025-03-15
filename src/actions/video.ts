@@ -9,8 +9,8 @@ import {currentUser} from "@clerk/nextjs/server";
 
 export const getVideoComments = async (videoId : string) => {
     try {
-        const commnets = await db.select({commentTitle : commentTable.title, commentCreatedAt : commentTable.createdAt, commentCreatorName : usersTable.firstName, commentCreatorImage : usersTable.image}).from(commentTable).innerJoin(usersTable, eq(commentTable.userId, usersTable.id));
-        return commnets;
+        const comments = await db.select({commentTitle : commentTable.title, commentCreatedAt : commentTable.createdAt, commentCreatorName : usersTable.firstName, commentCreatorImage : usersTable.image}).from(commentTable).innerJoin(usersTable, eq(commentTable.userId,usersTable.id)).where(eq(commentTable.videoId,videoId));
+        return comments;
     } catch (e) {
         console.log(e);
         return [];

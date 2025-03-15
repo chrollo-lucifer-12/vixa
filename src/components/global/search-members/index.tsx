@@ -2,12 +2,11 @@ import {useSearch} from "@/hooks/useSearch";
 import {useMutationData} from "@/hooks/useMutationData";
 import {Input} from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton"
-import Image from "next/image";
 import {Avatar, AvatarImage} from "@/components/ui/avatar";
 import {Button} from "@/components/ui/button";
-import {Plus} from "lucide-react";
 import {inviteMember} from "@/actions/user";
-
+import { Toaster } from "@/components/ui/sonner"
+import {toast} from "sonner";
 interface SearchMembersProps {
     workspaceId : string
 }
@@ -37,7 +36,8 @@ const SearchMembers = ({workspaceId} : SearchMembersProps) => {
                         </div>
                         <Button onClick={() => {
                             mutate({receiverId : user.id})
-                        }} className="text-black bg-white">Invite</Button>
+                            toast("User Invited!")
+                        }} className="text-black bg-white hover:bg-white" style={{borderRadius : "0.3rem"}}>Invite</Button>
                     </div>
                 ))}
             </div>

@@ -40,13 +40,28 @@ const VideoNode = memo(({ data }) => {
     );
 });
 
+const MemberNode = memo(({ data }) => {
+    return (
+        <div className="text-white ring-1 ring-blue-500" style={{
+            padding: '10px',
+            borderRadius: '5px',
+            backgroundColor: 'black',
+            width: '150px'
+        }}>
+            <div className="flex items-center gap-x-5" style={{fontWeight: 'bold'}}><VideoIcon className="text-blue-300" /> Video</div>
+            <div>{data.title}</div>
+            <Handle type="target" position={Position.Top} />
+            <Handle type="source" position={Position.Bottom} />
+        </div>
+    );
+});
+
 interface FlowPreviewProps {
     workspaceId: string
 }
 
 const initialNodes = [
-    {id: '1', position: {x: -100, y: -200}, data: {type: "folder", title: "A"}, type: 'folder'},
-    {id: '2', position: {x: 100, y: 200}, data: {type: "video", title: "B"}, type: 'video'},
+    {id: '1', position: {x: -100, y: 200}, data: {}, type: 'members'}
 ];
 
 const initialEdges = [{id: '1-2', source: '1', target: '2' }];
@@ -59,6 +74,7 @@ const FlowPreview = ({workspaceId}  :FlowPreviewProps) => {
     const nodeTypes: NodeTypes = {
         folder: FolderNode,
         video: VideoNode,
+        members : MemberNode
     };
 
     const {data} = useQueryData(["folder-videos"], () => getFolderWithVideos(workspaceId))

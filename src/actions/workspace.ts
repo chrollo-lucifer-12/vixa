@@ -6,7 +6,17 @@ import {folderTable, memberTable, usersTable, videoTable, workspaceTable} from "
 import {and, eq, or, sql} from "drizzle-orm";
 import {v4} from "uuid"
 import {videoNotification} from "@/actions/user";
+import videos from "@/components/global/videos";
 
+export const getVideoWorkspace = async (videoId : string) => {
+    try {
+        const findVideo = await db.query.videoTable.findFirst({where : eq(videoTable.id, videoId)});
+        const workspace = await db.query.workspaceTable.findFirst({where : eq(workspaceTable.id, findVideo!.workspaceId!)});
+        return workspace;
+    } catch (e) {
+        console.log(e);
+    }
+}
 
 export const getFolderWithVideos = async (workspaceId : string) => {
     try {
@@ -51,14 +61,12 @@ export const getWorkspaceFolders = async (workspaceId : string) => {
         const folders = await db
             .select({
                 folder: folderTable,
-                videoCount: sql<number>`(
-      SELECT COUNT(*) FROM ${videoTable} 
-      WHERE ${videoTable.folderId} = ${folderTable.id}
-    )`.as("videoCount"),
+                videoCount: sql`count(${videoTable.id})`
             })
             .from(folderTable)
-            .where(eq(folderTable.workspaceId, workspaceId));
-
+            .leftJoin(videoTable, eq(folderTable.id, videoTable.folderId))
+            .where(eq(folderTable.workspaceId, workspaceId))
+            .groupBy(folderTable.id);
         return folders;
     } catch (e) {
         console.log(e);
@@ -126,7 +134,7 @@ export const editVideo = async (videoId : string, folderId ?: string, title ?: s
     try {
         const updateFields: Record<string, string> = {};
 
-        if (folderId) updateFields.folder_id = folderId;
+        if (folderId) updateFields.folderId = folderId;
         if (title) updateFields.title = title;
         if (description) updateFields.description = description;
         if (summary) updateFields.summary = summary;
@@ -137,7 +145,6 @@ export const editVideo = async (videoId : string, folderId ?: string, title ?: s
             return;
         }
 
-        // Perform the update
         await db.update(videoTable).set(updateFields).where(eq(videoTable.id, videoId));
 
         await videoNotification(videoId, "You edited your video");

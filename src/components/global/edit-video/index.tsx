@@ -45,7 +45,7 @@ const EditVideo = ({workspaceId, videoId, videoDesc, videoSummary, videoTitle} :
 
     return <div>
         <Dialog>
-            <DialogTrigger><p className="bg-white hover:bg-white"
+            <DialogTrigger><p className="bg-white hover:bg-white pl-6 pr-6 pt-3 pb-3"
                                    style={{borderRadius: "0.4rem"}}>Edit</p></DialogTrigger>
             <DialogContent className="bg-[#09090b] border-[#222224]" style={{borderRadius: "0.2rem"}}>
                 <DialogHeader>
@@ -90,13 +90,13 @@ const EditVideo = ({workspaceId, videoId, videoDesc, videoSummary, videoTitle} :
                     </div>
                     <div className="grid grid-cols-4 items-center gap-4 text-white">
                         <Label htmlFor="summary" className="text-right">
-                            Summary
+                            Folder
                         </Label>
                         <Select>
-                            <SelectTrigger className="w-full" style={{borderRadius: "0.3rem"}}>
+                            <SelectTrigger className="w-full border-[#232325]" style={{borderRadius: "0.3rem"}}>
                                 <SelectValue placeholder="Folder" />
                             </SelectTrigger>
-                            <SelectContent className="w-full text-white" style={{borderRadius: "0.3rem"}}>
+                            <SelectContent className="w-full text-white border-[#232325]" style={{borderRadius: "0.3rem"}}>
                                 {
                                     folders.map((folder,i) => (
                                         <SelectItem key={i} value={folder.folder.name!} className="cursor-pointer" onClick={() => {

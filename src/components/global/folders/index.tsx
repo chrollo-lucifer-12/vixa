@@ -25,9 +25,7 @@ export type FolderProps =
 const Folders = ({workspaceId} : FoldersProps) => {
 
     const {data, isFetched} = useQueryData(["workspace-folders"], () => getWorkspaceFolders(workspaceId));
-    const {latestVariables} = useMutationDataState(["create-folder"])
     const folders = data as FolderProps
-
     if (isFetched && folders) {
 
     }
@@ -39,7 +37,7 @@ const Folders = ({workspaceId} : FoldersProps) => {
                 <span>Folders</span>
             </div>
             <ScrollArea className="w-[800px] whitespace-nowrap">
-                <div className="flex ">
+                <div className="flex gap-x-3">
                     {
                         folders.length ?
                         folders.map((folderData) => (

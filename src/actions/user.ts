@@ -14,6 +14,24 @@ import {
 import {and, eq, like, or} from "drizzle-orm";
 import {v4} from "uuid"
 
+export const hasPermissionToEdit = async (videoId : string) => {
+    try {
+        const user = await currentUser();
+        if (!user) return false;
+        const findUser = await db.query.usersTable.findFirst({where : eq(usersTable.clerkId, user.id)});
+        if (!findUser) return false
+        const findVideo = await db.query.videoTable.findFirst({where : eq(videoTable.id, videoId)});
+        if (!findVideo) return false;
+        const findWorkspace = await db.query.workspaceTable.findFirst({where : eq(workspaceTable.id, findVideo.workspaceId!)});
+        const findMember = await db.query.memberTable.findFirst({where : and(eq(memberTable.workspaceId,findWorkspace!.id), eq(memberTable.userId,findUser.id))});
+        if (findMember) return true;
+        return false;
+    } catch (e) {
+        console.log(e);
+        return false;
+    }
+}
+
 export const onAuthenticateUser = async () => {
     try {
         const user = await currentUser();
@@ -58,9 +76,12 @@ export const getUserVideos = async (folderId : string) => {
 export const getUserWorkspaces = async () => {
     try {
         const user = await currentUser();
-        const workspaces = await db.select({workspaceId: workspaceTable.id, workspaceTitle: workspaceTable.name, workspaceType: workspaceTable.type}).from(workspaceTable).innerJoin(usersTable, eq(usersTable.id, workspaceTable.userId)).where(eq(usersTable.clerkId, user!.id));
-        if (!workspaces) return [];
-        return workspaces
+        if (!user) return;
+        const findUser = await db.query.usersTable.findFirst({where : eq(usersTable.clerkId,user?.id)});
+        if (!findUser) return;
+        const workspaces = await db.select({workspaceId: workspaceTable.id, workspaceTitle: workspaceTable.name, workspaceType: workspaceTable.type}).from(workspaceTable).where(eq(workspaceTable.userId,findUser.id));
+        const work = await db.select({workspaceId: workspaceTable.id, workspaceTitle: workspaceTable.name, workspaceType: workspaceTable.type}).from(memberTable).innerJoin(workspaceTable, eq(memberTable.workspaceId, workspaceTable.id)).where(eq(memberTable.userId, findUser.id));
+        return [...workspaces, ...work];
     } catch (e) {
         console.log(e);
         return []
@@ -122,6 +143,8 @@ export const inviteMember = async (workspaceId : string, receiverId : string) =>
                 where: eq(workspaceTable.id, workspaceId)
             })
             if (workspace) {
+                const findInvite = await db.query.inviteTable.findFirst({where : and(eq(inviteTable.receiverId,receiverId), eq(inviteTable.workspaceId,workspaceTable))})
+                if (findInvite) return;
                 await db.insert(inviteTable).values({
                     id : v4(),
                     senderId : findSender.id,
