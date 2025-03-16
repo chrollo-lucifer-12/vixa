@@ -23,7 +23,7 @@ const Settings = () => {
         <ScrollArea className="w-full">
             <div className="flex flex-1 flex-col gap-4 p-4">
                 {
-                    invites.map((n, index) => (
+                    invites.length ? invites.map((n, index) => (
                         <div
                             key={index}
                             className="aspect-video h-12 w-[60%] rounded-lg bg-[#272729] flex items-center"
@@ -41,7 +41,7 @@ const Settings = () => {
 
                             </Button>
                         </div>
-                    ))
+                    )) : (<p className={"text-white"}>You have no invites.</p>)
                 }
             </div>
         </ScrollArea>

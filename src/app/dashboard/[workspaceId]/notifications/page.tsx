@@ -16,7 +16,7 @@ const Notifications  =  () => {
         <ScrollArea className="w-full">
         <div className="flex flex-1 flex-col gap-4 p-4">
             {
-                notifications.map((n, index) => (
+                notifications.length ?  notifications.map((n, index) => (
                     <div
                         key={index}
                         className="aspect-video h-12 w-[60%] rounded-lg bg-[#272729] flex items-center"
@@ -27,7 +27,7 @@ const Notifications  =  () => {
                         <p className="mr-5">{n.notificationCreatedAt}</p>
                         </span>
                     </div>
-                ))
+                )) : (<p className="text-white">No notifications to show</p>)
             }
         </div>
         </ScrollArea>

@@ -143,7 +143,7 @@ export const inviteMember = async (workspaceId : string, receiverId : string) =>
                 where: eq(workspaceTable.id, workspaceId)
             })
             if (workspace) {
-                const findInvite = await db.query.inviteTable.findFirst({where : and(eq(inviteTable.receiverId,receiverId), eq(inviteTable.workspaceId,workspaceTable))})
+                const findInvite = await db.query.inviteTable.findFirst({where : and(eq(inviteTable.receiverId,receiverId), eq(inviteTable.workspaceId,workspaceTable.id))})
                 if (findInvite) return;
                 await db.insert(inviteTable).values({
                     id : v4(),
