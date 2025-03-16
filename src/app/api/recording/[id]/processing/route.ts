@@ -1,7 +1,7 @@
 import {NextRequest, NextResponse} from "next/server";
 import db from "@/db";
 import {folderTable, mediaTable, usersTable, videoTable, workspaceTable} from "@/db/schema";
-import {eq} from "drizzle-orm";
+import {and, eq} from "drizzle-orm";
 import {v4} from "uuid"
 import {currentUser} from "@clerk/nextjs/server";
 
@@ -14,15 +14,17 @@ export async function POST(req : NextRequest, {params } : {params : {id : string
 
         const findUser = await db.query.usersTable.findFirst({where : eq(usersTable.id, findMedia!.userId!)});
 
+        console.log("user", findUser);
+
         if (!findUser) {
             return NextResponse.json({status : 400});
         }
 
         const findWorkspace = await db.query.workspaceTable.findFirst({where : eq(workspaceTable.userId, findUser.id)});
 
-        console.log(findWorkspace);
+        console.log( "workspace",findWorkspace);
 
-        let findFolder = await db.select().from(folderTable).where(eq(folderTable.name, "Unedited Videos"));
+        let findFolder = await db.select().from(folderTable).where(and(eq(folderTable.name, "Unedited Videos"), eq(folderTable.workspaceId, findWorkspace!.id)));
 
         if (!findFolder || !findFolder.length) {
             findFolder = await db.insert(folderTable).values({workspaceId: findWorkspace!.id, createdAt: new Date().toISOString(), id: v4(), name: "Unedited Videos"}).returning();
