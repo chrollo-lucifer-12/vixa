@@ -15,7 +15,7 @@ interface VideosProps {
 const Videos = ({folderId, videosKey, workspaceId} : VideosProps) => {
 
     const {data, isPending} = useQueryData(["folder-videos"], () => getUserVideos(folderId))
-    console.log(data);
+
     const allVideos = data as VideoProps
     //console.log( "all videos", allVideos);
 

@@ -10,7 +10,7 @@ export async function POST(req : NextRequest, {params} : {params : {id : string}
         const {id} = await params
 
         const completeProcessing = await db.update(videoTable).set({processing: false,}).where(eq(videoTable.id,id)).returning();
-        console.log(completeProcessing);
+
         return NextResponse.json({status: 200});
     } catch (e) {
         console.log(e);

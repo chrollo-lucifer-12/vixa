@@ -5,7 +5,7 @@ import {eq} from "drizzle-orm";
 import {v4} from "uuid";
 
 export async function GET(req : NextRequest , {params} : {params : {id : string}}) {
-    console.log("endpoint hit");
+
     const {id} = await params
     try {
     const user = await db.query.usersTable.findFirst({
@@ -15,7 +15,7 @@ export async function GET(req : NextRequest , {params} : {params : {id : string}
         where: eq(mediaTable.userId, user!.id)
     })
     if (media) {
-        console.log(media);
+
         return NextResponse.json({status : 200, media})
     }
     const createMedia = await db.insert(mediaTable).values({

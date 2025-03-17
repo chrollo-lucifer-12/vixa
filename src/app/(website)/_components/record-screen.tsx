@@ -6,9 +6,11 @@ const RecordScreen = () => {
         <p className={"text-white text-5xl font-semibold"}>Record your screen in seconds</p>
         <p className={"text-gray-300"}>Create, share, and collaborate with easy screen recordings. Communicate more
             effectively with video messages that save time.</p>
-        <div className={"mt-4 space-x-2"}>
-            <Button className={"bg-white text-black"} style={{borderRadius: "0.3rem"}}>Get Started
-                Free <MoveRight/></Button>
+        <div className={"mt-4 space-x-2 flex"}>
+            <Button className={"bg-white text-black hover:bg-white items-center flex gap-x-3"} style={{borderRadius: "0.3rem"}}>
+                <p> Get Started
+                    Free</p>
+                <MoveRight/></Button>
             <Button className={"border border-[#1c1b1e]"} style={{borderRadius: "0.3rem"}}><Play/> See how it
                 works</Button>
         </div>

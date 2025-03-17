@@ -4,7 +4,7 @@ import {mediaTable} from "@/db/schema";
 import {eq} from "drizzle-orm";
 
 export async function POST (req: NextRequest, {params} : {params : {id : string}}) {
-    console.log("called")
+
     const {id} = await params;
 
     const body = await req.json();
